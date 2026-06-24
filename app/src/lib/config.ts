@@ -1,0 +1,1 @@
+export const HTTP_BASE_URL = process.env.EXPO_PUBLIC_HTTP_BASE_URL || 'http://localhost:9000';
