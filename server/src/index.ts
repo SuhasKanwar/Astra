@@ -1,7 +1,16 @@
 import express, { type Request, type Response } from 'express';
+import cors from 'cors';
 import { PORT } from './lib/config.js';
+import logger from './middlewares/logger.js';
 
 const app = express();
+
+app.use(cors({
+    origin: '*'
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(logger);
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200).json({
