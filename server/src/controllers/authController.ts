@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { prisma } from "../lib/prisma";
-import { JWT_SECRET } from "../lib/config";
+import { prisma } from "../lib/prisma.ts";
+import { JWT_SECRET } from "../lib/config.ts";
 
 export async function signUpHandler(req: Request, res: Response) {
     try {

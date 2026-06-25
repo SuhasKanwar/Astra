@@ -1,8 +1,8 @@
 import express, { type Request, type Response } from 'express';
 import cors from 'cors';
-import { PORT } from './lib/config.js';
-import logger from './middlewares/logger.js';
-import authRouter from './routes/authRouter.js';
+import { PORT } from './lib/config.ts';
+import logger from './middlewares/logger.ts';
+import authRouter from './routes/authRouter.ts';
 
 const app = express();
 

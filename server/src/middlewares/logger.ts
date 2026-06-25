@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import fs from "fs";
-import { LOGS_DIRECTORY } from "../lib/config.js";
+import { LOGS_DIRECTORY } from "../lib/config.ts";
 
 export default function logger(req: Request, res: Response, next: NextFunction) {
     if (!fs.existsSync(LOGS_DIRECTORY)) {

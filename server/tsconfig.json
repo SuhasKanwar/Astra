@@ -9,6 +9,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
     "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
     "target": "es2023",
     "types": [],
     // For nodejs:
@@ -37,7 +38,9 @@
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",

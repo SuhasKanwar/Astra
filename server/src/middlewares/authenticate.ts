@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../lib/config";
+import { JWT_SECRET } from "../lib/config.ts";
 
 export default function authenticate(req: Request, res: Response, next: NextFunction) {
     try {
