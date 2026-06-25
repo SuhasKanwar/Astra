@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import { PORT } from './lib/config.js';
 import logger from './middlewares/logger.js';
+import authRouter from './routes/authRouter.js';
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.get('/health', (req: Request, res: Response) => {
         message: "Astra API is healthy and running successfully.",
     });
 });
+
+app.use("/api/auth", authRouter);
 
 app.listen(PORT, (err) => {
     if (err) {
