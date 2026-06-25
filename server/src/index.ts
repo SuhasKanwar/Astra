@@ -3,6 +3,7 @@ import cors from 'cors';
 import { PORT } from './lib/config.ts';
 import logger from './middlewares/logger.ts';
 import authRouter from './routes/authRouter.ts';
+import authenticate from './middlewares/authenticate.ts';
 
 const app = express();
 

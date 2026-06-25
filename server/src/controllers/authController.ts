@@ -47,6 +47,7 @@ export async function signUpHandler(req: Request, res: Response) {
             }
         });
     } catch (error) {
+        console.error("Error during sign-up:", error);
         return res.status(500).json({
             success: false,
             message: "An error occurred during sign-up.",
