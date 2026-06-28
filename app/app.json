@@ -19,7 +19,13 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.astra"
+      "package": "com.astra.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.READ_CALL_LOG",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ]
     },
     "web": {
       "output": "static",

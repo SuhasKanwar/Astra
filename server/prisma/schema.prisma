@@ -15,3 +15,27 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+model ScamReport {
+  id          String   @id @default(cuid())
+  number      String
+  reporterId  String?
+  scamType    String
+  description String
+  severity    Int      @default(3)
+  createdAt   DateTime @default(now())
+
+  @@index([number])
+}
+
+model CallCheck {
+  id        String   @id @default(cuid())
+  userId    String
+  number    String
+  riskScore Int
+  label     String
+  scamType  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

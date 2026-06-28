@@ -1,8 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import astraReducer from "./slices/astraSlice";
+import { configureStore } from '@reduxjs/toolkit';
+
+import authReducer from './slices/authSlice';
 
 export const store = configureStore({
-    reducer: {
-        astra: astraReducer
-    }
+  reducer: {
+    auth: authReducer,
+  },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

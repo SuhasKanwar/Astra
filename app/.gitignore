@@ -43,3 +43,7 @@ example
 /android
 
 .env
+# native module build outputs
+modules/**/android/build/
+modules/**/android/.cxx/
+modules/**/android/.gradle/

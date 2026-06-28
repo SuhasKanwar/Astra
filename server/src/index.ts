@@ -3,6 +3,9 @@ import cors from 'cors';
 import { PORT } from './lib/config.ts';
 import logger from './middlewares/logger.ts';
 import authRouter from './routes/authRouter.ts';
+import callsRouter from './routes/callsRouter.ts';
+import checksRouter from './routes/checksRouter.ts';
+import reportsRouter from './routes/reportsRouter.ts';
 import authenticate from './middlewares/authenticate.ts';
 
 const app = express();
@@ -29,6 +32,9 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/calls", authenticate, callsRouter);
+app.use("/api/checks", authenticate, checksRouter);
+app.use("/api/reports", authenticate, reportsRouter);
 
 app.listen(PORT, (err) => {
     if (err) {

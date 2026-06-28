@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- Merged into the host app manifest by Gradle. Powers the PHONE_STATE
+       BroadcastReceiver (registered dynamically) and the WindowManager overlay. -->
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.READ_CALL_LOG" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+</manifest>

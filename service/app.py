@@ -8,6 +8,7 @@ from utils.logger import logger
 from utils.exception import AstraException
 
 from config import PORT, ALLOWED_ORIGINS
+from routers.classify import router as classify_router
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +21,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.include_router(classify_router)
 
 @app.get("/", tags=["Root"])
 def root() -> dict:
