@@ -7,11 +7,18 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AuthProvider {
+  GOOGLE
+  CREDENTIALS
+}
+
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   name      String?
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  imageUrl  String?
+  password  String?
+  provider  AuthProvider
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

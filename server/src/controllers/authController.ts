@@ -1,12 +1,11 @@
 import type { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { prisma } from "../lib/prisma.ts";
-import { JWT_SECRET } from "../lib/config.ts";
+import { buildAuthResponse } from "../utils/auth.ts";
 
 export async function signUpHandler(req: Request, res: Response) {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, imageUrl } = req.body;
         if(!name || !email || !password) {
             return res.status(400).json({
                 success: false,
@@ -31,20 +30,14 @@ export async function signUpHandler(req: Request, res: Response) {
                 name,
                 email,
                 password: hashedPassword,
+                provider: "CREDENTIALS",
+                imageUrl: imageUrl || null,
             },
         });
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET);
         return res.status(201).json({
             success: true,
             message: "User registered successfully.",
-            data: {
-                user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                },
-                token,
-            }
+            data: buildAuthResponse(user),
         });
     } catch (error) {
         console.error("Error during sign-up:", error);
@@ -59,10 +52,10 @@ export async function signUpHandler(req: Request, res: Response) {
 export async function signInHandler(req: Request, res: Response) {
     try {
         const { email, password } = req.body;
-        if(!email || !password) {
+        if(!email) {
             return res.status(400).json({
                 success: false,
-                message: "Email and password are required.",
+                message: "Email is required.",
             });
         }
 
@@ -76,6 +69,28 @@ export async function signInHandler(req: Request, res: Response) {
                 message: "Invalid email.",
             });
         }
+
+        if (user.provider === "GOOGLE") {
+            return res.status(401).json({
+                success: false,
+                message: "This account uses Google sign-in. Continue with Google instead of a password.",
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                success: false,
+                message: "Password is required for credential-based accounts.",
+            });
+        }
+
+        if (!user.password) {
+            return res.status(500).json({
+                success: false,
+                message: "This account is missing a password hash.",
+            });
+        }
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
@@ -83,18 +98,10 @@ export async function signInHandler(req: Request, res: Response) {
                 message: "Invalid password.",
             });
         }
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET);
         return res.status(200).json({
             success: true,
             message: "User signed in successfully.",
-            data: {
-                user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                },
-                token,
-            }
+            data: buildAuthResponse(user),
         });
     } catch (error) {
         return res.status(500).json({
@@ -115,6 +122,63 @@ export async function signOutHandler(req: Request, res: Response) {
         return res.status(500).json({
             success: false,
             message: "An error occurred during sign-out.",
+            error: error instanceof Error ? error.message : String(error),
+        });
+    }
+}
+
+export async function googleAuthHandler(req: Request, res: Response) {
+    try {
+        const { name, email, imageUrl } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required.",
+            });
+        }
+
+        const existingUser = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (existingUser) {
+            const updatedUser = await prisma.user.update({
+                where: { email },
+                data: {
+                    name: name ?? existingUser.name,
+                    provider: "GOOGLE",
+                    imageUrl: imageUrl ?? existingUser.imageUrl,
+                    password: existingUser.password ?? null,
+                },
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: "Google account confirmed successfully.",
+                data: buildAuthResponse(updatedUser),
+            });
+        }
+
+        const user = await prisma.user.create({
+            data: {
+                name: name ?? null,
+                email,
+                provider: "GOOGLE",
+                imageUrl: imageUrl ?? null,
+                password: null,
+            },
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Google account created successfully.",
+            data: buildAuthResponse(user),
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while confirming Google sign-in.",
             error: error instanceof Error ? error.message : String(error),
         });
     }

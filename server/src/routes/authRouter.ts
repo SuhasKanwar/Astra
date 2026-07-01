@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { signInHandler, signOutHandler, signUpHandler } from "../controllers/authController.ts";
+import { googleAuthHandler, signInHandler, signOutHandler, signUpHandler } from "../controllers/authController.ts";
 
 const authRouter = Router();
 
 authRouter.post("/signup", signUpHandler);
+authRouter.post("/google", googleAuthHandler);
 authRouter.post("/signin", signInHandler);
 authRouter.post("/signout", signOutHandler);
 

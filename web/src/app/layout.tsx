@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Provider from "@/context/Provider";
 
 export const metadata: Metadata = {
   title: "Astra",
@@ -23,7 +24,11 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Provider>
+          {children}
+        </Provider>
+      </body>
     </html>
   );
 }

@@ -6,7 +6,6 @@ dotenv==0.9.9
 fastapi==0.138.0
 h11==0.16.0
 idna==3.18
-packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1777103621/work
 pydantic==2.13.4
 pydantic_core==2.46.4
 python-dotenv==1.2.2
