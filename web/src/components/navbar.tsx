@@ -7,37 +7,7 @@ import CardNav, { CardNavItem } from "./ui/card-nav";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-const NAV_ITEMS: CardNavItem[] = [
-    {
-        label: "Disruptions",
-        bgColor: "var(--primary-color)",
-        textColor: "var(--surface-color)",
-        links: [
-            { label: "Geopolitical Events", ariaLabel: "View geopolitical disruptions", href: "/dashboard?tab=events" },
-            { label: "Shipping Routes", ariaLabel: "View shipping route blockages", href: "/dashboard?tab=routes" },
-            { label: "Market Signals", ariaLabel: "View market and price signals", href: "/dashboard?tab=signals" }
-        ]
-    },
-    {
-        label: "Analytics",
-        bgColor: "var(--secondary-color)",
-        textColor: "var(--surface-color)",
-        links: [
-            { label: "Disruption Predictions", ariaLabel: "View disruptions prediction models", href: "/dashboard?tab=predictions" },
-            { label: "Risk Simulations", ariaLabel: "Run disruption scenarios", href: "/dashboard?tab=simulations" }
-        ]
-    },
-    {
-        label: "Contact",
-        bgColor: "var(--surface-strong-color)",
-        textColor: "var(--primary-text-color)",
-        links: [
-            { label: "Suhas Kanwar", ariaLabel: "Suhas Kanwar", href: "https://github.com/SuhasKanwar" },
-            { label: "Pratyaksh Saluja", ariaLabel: "Pratyaksh Saluja", href: "https://github.com/PratyakshSaluja" }
-        ]
-    }
-];
+import { NAV_ITEMS } from "@/lib/navigate";
 
 export default function Navbar() {
     const { data: session } = useSession();

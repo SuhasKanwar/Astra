@@ -42,3 +42,18 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 10px;
 }
+
+@keyframes toast-enter {
+  from {
+    transform: translateY(100%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-toast-enter {
+  animation: toast-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

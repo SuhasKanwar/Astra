@@ -39,7 +39,7 @@ export default function Toast({
 					return (
 						<article
 							key={toast.id}
-							className={`pointer-events-auto rounded-3xl border p-4 shadow-2xl backdrop-blur ${styles.ring}`}
+							className={`pointer-events-auto rounded-3xl border p-4 shadow-2xl backdrop-blur ${styles.ring} animate-toast-enter`}
 						>
 							<div className="flex items-start gap-3">
 								<span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${styles.badge}`} />
