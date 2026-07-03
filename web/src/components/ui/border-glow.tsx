@@ -131,20 +131,30 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
     if (!animated) return;
     const angleStart = 110;
     const angleEnd = 465;
-    setSweepActive(true);
-    setCursorAngle(angleStart);
+
+    const handle = requestAnimationFrame(() => {
+      setSweepActive(true);
+      setCursorAngle(angleStart);
+    });
 
     animateValue({ duration: 500, onUpdate: v => setEdgeProximity(v / 100) });
-    animateValue({ ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
-      setCursorAngle((angleEnd - angleStart) * (v / 100) + angleStart);
-    }});
-    animateValue({ ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
-      setCursorAngle((angleEnd - angleStart) * (v / 100) + angleStart);
-    }});
-    animateValue({ ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
+    animateValue({
+      ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
+        setCursorAngle((angleEnd - angleStart) * (v / 100) + angleStart);
+      }
+    });
+    animateValue({
+      ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
+        setCursorAngle((angleEnd - angleStart) * (v / 100) + angleStart);
+      }
+    });
+    animateValue({
+      ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0,
       onUpdate: v => setEdgeProximity(v / 100),
       onEnd: () => setSweepActive(false),
     });
+
+    return () => cancelAnimationFrame(handle);
   }, [animated]);
 
   const colorSensitivity = edgeSensitivity + 20;
@@ -175,7 +185,6 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
         boxShadow: 'rgba(0,0,0,0.1) 0 1px 2px, rgba(0,0,0,0.1) 0 2px 4px, rgba(0,0,0,0.1) 0 4px 8px, rgba(0,0,0,0.1) 0 8px 16px, rgba(0,0,0,0.1) 0 16px 32px, rgba(0,0,0,0.1) 0 32px 64px',
       }}
     >
-      {/* mesh gradient border */}
       <div
         className="absolute inset-0 rounded-[inherit] z-[-1]"
         style={{
@@ -192,7 +201,6 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
         }}
       />
 
-      {/* mesh gradient fill near edges */}
       <div
         className="absolute inset-0 rounded-[inherit] z-[-1]"
         style={{
@@ -224,7 +232,6 @@ const BorderGlow: React.FC<BorderGlowProps> = ({
         } as React.CSSProperties}
       />
 
-      {/* outer glow */}
       <span
         className="absolute pointer-events-none z-1 rounded-[inherit]"
         style={{

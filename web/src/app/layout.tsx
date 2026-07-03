@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Provider from "@/context/Provider";
+import Navbar from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "Astra",
@@ -26,6 +27,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Provider>
+          <Navbar />
           {children}
         </Provider>
       </body>

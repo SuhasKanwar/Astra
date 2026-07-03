@@ -5,6 +5,7 @@ import { signIn as nextAuthSignIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastProvider";
 import { AUTH_CALLBACK_URL } from "@/lib/config";
+import Link from "next/link";
 
 export default function SignUpPage() {
     const router = useRouter();
@@ -78,7 +79,7 @@ export default function SignUpPage() {
                 password,
                 register: "true",
                 redirect: false,
-                AUTH_CALLBACK_URL,
+                callbackUrl: AUTH_CALLBACK_URL,
             });
 
             if (result?.error) {
@@ -109,7 +110,7 @@ export default function SignUpPage() {
     const handleGoogleSignIn = async () => {
         setErrorMessage(null);
         toast.info("Google sign up", "Continue in the provider window to finish authentication.");
-        await nextAuthSignIn("google", { AUTH_CALLBACK_URL });
+        await nextAuthSignIn("google", { callbackUrl: AUTH_CALLBACK_URL });
     };
 
     return (
@@ -125,13 +126,14 @@ export default function SignUpPage() {
                     </p>
                 </section>
 
-                <section className="rounded-4xl border border-(--border-color) bg-(--surface-color) p-6 shadow-2xl shadow-black/30 backdrop-blur xl:p-8">
+                <section className="rounded-4xl border border-(--border-color) bg-(--surface-color) p-6 backdrop-blur xl:p-8">
                     <div className="space-y-5">
                         <button
                             type="button"
                             onClick={handleGoogleSignIn}
-                            className="flex w-full items-center justify-center rounded-2xl border border-(--border-color) bg-(--surface-strong-color) px-4 py-3 text-sm font-medium text-(--primary-text-color) transition hover:bg-(--surface-color)"
+                            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-(--border-color) bg-(--surface-strong-color) px-4 py-3 text-sm font-medium text-(--primary-text-color) transition hover:bg-(--surface-color)"
                         >
+                            <img src="/google-icon.svg" alt="Google" className="w-5 h-5" />
                             Continue with Google
                         </button>
 
@@ -177,9 +179,9 @@ export default function SignUpPage() {
 
                         <p className="mt-4 text-sm text-(--secondary-text-color)">
                             Already have an account?{' '}
-                            <a href="/auth/signin" className="font-medium text-(--primary-color) hover:underline">
+                            <Link href="/auth/signin" className="font-medium text-(--primary-color) hover:underline">
                                 Sign in
-                            </a>
+                            </Link>
                         </p>
                     </div>
                 </section>
