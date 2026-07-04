@@ -5,7 +5,7 @@ import StaggeredMenu from './ui/staggered-menu';
 
 export default function Sidebar() {
     return (
-        <div className="h-screen bg-[var(--primary-bg-color)]">
+        <div className="h-screen bg-(--primary-bg-color)">
             <StaggeredMenu
                 position="left"
                 isFixed={true}

@@ -97,7 +97,7 @@ export default function Navbar() {
             <button
                 ref={avatarRef}
                 onClick={toggleDropdown}
-                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer overflow-hidden border border-[var(--border-color)] transition hover:ring-2 hover:ring-[var(--primary-color)] outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer overflow-hidden border border-(--border-color) transition hover:ring-2 hover:ring-(--primary-color) outline-none focus:ring-2 focus:ring-(--primary-color)"
                 aria-label="User menu"
                 aria-expanded={isDropdownOpen}
             >
@@ -107,11 +107,12 @@ export default function Navbar() {
                         alt={session.user.name || "User Avatar"}
                         width={40}
                         height={40}
+                        loading="eager"
                         className="w-full h-full object-cover"
                         onError={() => setImageError(true)}
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center font-bold text-xs bg-[var(--primary-color)] text-[var(--surface-color)]">
+                    <div className="w-full h-full flex items-center justify-center font-bold text-xs bg-(--primary-color) text-(--surface-color)">
                         {initials}
                     </div>
                 )}
@@ -126,22 +127,22 @@ export default function Navbar() {
                         width: "220px",
                         zIndex: 9999,
                     }}
-                    className="bg-[var(--surface-color)] border border-[var(--border-color)] rounded-2xl shadow-xl p-3 flex flex-col gap-1 transition-all animate-in fade-in slide-in-from-top-2 duration-200"
+                    className="bg-(--surface-color) border border-(--border-color) rounded-2xl shadow-xl p-3 flex flex-col gap-1 transition-all animate-in fade-in slide-in-from-top-2 duration-200"
                 >
-                    <div className="px-2 py-1.5 border-b border-[var(--border-color)] mb-1.5 max-w-full">
-                        <p className="text-xs text-[var(--secondary-text-color)] font-medium">Signed in as</p>
-                        <p className="text-sm font-semibold text-[var(--primary-text-color)] truncate">
+                    <div className="px-2 py-1.5 border-b border-(--border-color) mb-1.5 max-w-full">
+                        <p className="text-xs text-(--secondary-text-color) font-medium">Signed in as</p>
+                        <p className="text-sm font-semibold text-(--primary-text-color) truncate">
                             {session.user?.name || "Astra User"}
                         </p>
-                        <p className="text-xs text-[var(--secondary-text-color)] truncate">
+                        <p className="text-xs text-(--secondary-text-color) truncate">
                             {session.user?.email}
                         </p>
                     </div>
                     <Link
                         href="/dashboard"
-                        className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-[var(--primary-text-color)] hover:bg-[var(--surface-strong-color)] transition-colors no-underline font-medium"
+                        className="flex items-center gap-2 px-2 py-2 rounded-lg text-sm text-(--primary-text-color) hover:bg-(--surface-strong-color) transition-colors no-underline font-medium"
                     >
-                        <LayoutDashboard className="w-4 h-4 text-[var(--secondary-text-color)]" />
+                        <LayoutDashboard className="w-4 h-4 text-(--secondary-text-color)" />
                         Dashboard
                     </Link>
                     <button
@@ -158,7 +159,7 @@ export default function Navbar() {
     ) : (
         <Link
             href="/auth/signin"
-            className="hidden md:inline-flex items-center justify-center font-semibold border-0 rounded-[calc(0.75rem-0.2rem)] px-5 h-10 transition hover:opacity-90 active:scale-95 cursor-pointer select-none no-underline text-sm"
+            className="hidden md:inline-flex items-center justify-center font-semibold border-0 rounded-[0.55rem] px-5 h-10 transition hover:opacity-90 active:scale-95 cursor-pointer select-none no-underline text-sm"
             style={{ backgroundColor: "var(--primary-color)", color: "var(--surface-color)" }}
         >
             Sign In
