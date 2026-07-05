@@ -7,7 +7,7 @@ import { ArrowRight, Play } from "lucide-react";
 import dynamic from "next/dynamic";
 import { CIRCUIT_PATHS, CIRCUIT_NODES, GLOBE_CONFIG, SAMPLE_ARCS } from '@/data/globe-data';
 
-const World = dynamic(() => import("./ui/globe").then((m) => m.World), {
+const World = dynamic(() => import("../ui/globe").then((m) => m.World), {
     ssr: false,
 });
 

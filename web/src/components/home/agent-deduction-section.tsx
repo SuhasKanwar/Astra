@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Cpu, AlertTriangle, CheckCircle2, ArrowRight } from "lucide-react";
 import Card from "@/components/ui/card";

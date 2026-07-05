@@ -71,7 +71,7 @@ export default function FeaturesSection() {
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-(--primary-text-color) tracking-tight mb-4">
-                        Unmatched Intelligence
+                        Unmatched <span className="text-transparent bg-clip-text bg-linear-to-r from-(--primary-color) to-(--secondary-color)">Intelligence</span>
                     </h2>
                     <p className="text-(--secondary-text-color) text-lg max-w-2xl mx-auto">
                         Astra equips you with next-generation tools to secure and optimize your energy supply chain operations globally.
