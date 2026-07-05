@@ -1,6 +1,6 @@
 "use client";
 
-import { MENU_ITEMS, SOCIAL_ITEMS } from '@/lib/navigate';
+import { SIDEBAR_ITEMS, SIDEBAR_SOCIAL_ITEMS } from '@/lib/navigate';
 import StaggeredMenu from './ui/staggered-menu';
 
 export default function Sidebar() {
@@ -9,8 +9,8 @@ export default function Sidebar() {
             <StaggeredMenu
                 position="left"
                 isFixed={true}
-                items={MENU_ITEMS}
-                socialItems={SOCIAL_ITEMS}
+                items={SIDEBAR_ITEMS}
+                socialItems={SIDEBAR_SOCIAL_ITEMS}
                 displaySocials
                 displayItemNumbering={true}
                 menuButtonColor="var(--primary-text-color)"
