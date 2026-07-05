@@ -268,26 +268,26 @@ export default function HeroSection() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="relative overflow-hidden bg-[var(--primary-bg-color)] min-h-screen flex flex-col justify-center px-4 sm:px-8 pt-[6rem] sm:pt-28 pb-6 sm:pb-8" id="hero">
+        <section ref={sectionRef} className="relative overflow-hidden bg-(--primary-bg-color) min-h-screen flex flex-col justify-center px-4 sm:px-8 pt-24 sm:pt-28 pb-6 sm:pb-8" id="hero">
             <CircuitPattern />
 
-            <div className="relative z-10 max-w-[1320px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 items-center gap-12 text-center lg:text-left">
+            <div className="relative z-10 max-w-330 mx-auto w-full grid grid-cols-1 lg:grid-cols-2 items-center gap-12 text-center lg:text-left">
                 <div className="flex flex-col items-center lg:items-start gap-6">
                     <h1
                         ref={headingRef}
-                        className="text-[clamp(2rem,8vw,2.8rem)] sm:text-[clamp(2.6rem,5.5vw,4.2rem)] font-black leading-[1.08] tracking-[-0.03em] text-[var(--primary-text-color)] m-0"
+                        className="text-[clamp(2rem,8vw,2.8rem)] sm:text-[clamp(2.6rem,5.5vw,4.2rem)] font-black leading-[1.08] tracking-[-0.03em] text-(--primary-text-color) m-0"
                         style={{ opacity: 0 }}
                     >
                         SECURING ENERGY.
                         <br />
-                        <span className="bg-gradient-to-br from-[var(--primary-color)] via-[var(--secondary-color)] via-60% to-[#818CF8] bg-clip-text text-transparent">
+                        <span className="bg-linear-to-br from-(--primary-color) via-(--secondary-color) via-60% to-[#818CF8] bg-clip-text text-transparent">
                             PREDICTING DISRUPTIONS.
                         </span>
                     </h1>
 
                     <p
                         ref={subheadingRef}
-                        className="text-[0.95rem] sm:text-[1.1rem] leading-[1.7] text-[var(--secondary-text-color)] max-w-[600px] lg:max-w-[500px] m-0"
+                        className="text-[0.95rem] sm:text-[1.1rem] leading-[1.7] text-(--secondary-text-color) max-w-150 lg:max-w-125 m-0"
                         style={{ opacity: 0 }}
                     >
                         End-to-end supply chain intelligence across geopolitical
@@ -300,12 +300,12 @@ export default function HeroSection() {
                         className="flex flex-col sm:flex-row items-center gap-4 pt-2 w-full lg:w-auto justify-center lg:justify-start"
                         style={{ opacity: 0 }}
                     >
-                        <Link href="/auth/signin" className="group inline-flex items-center justify-center gap-2 px-7 py-[0.85rem] rounded-[10px] bg-[var(--primary-color)] text-[var(--surface-color)] font-bold text-[0.95rem] no-underline border-none transition-all duration-200 ease-in hover:bg-[#1D4ED8] hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98] w-full sm:w-auto">
+                        <Link href="/auth/signin" className="group inline-flex items-center justify-center gap-2 px-7 py-[0.85rem] rounded-[10px] bg-(--primary-color) text-(--surface-color) font-bold text-[0.95rem] no-underline border-none transition-all duration-200 ease-in hover:bg-[#1D4ED8] hover:-translate-y-px active:translate-y-0 active:scale-[0.98] w-full sm:w-auto">
                             <span>Get Started</span>
-                            <ArrowRight className="w-[18px] h-[18px] transition-transform duration-200 ease-in group-hover:translate-x-[3px]" />
+                            <ArrowRight className="w-4.5 h-4.5 transition-transform duration-200 ease-in group-hover:translate-x-0.75" />
                         </Link>
-                        <Link href="#demo" className="inline-flex items-center justify-center gap-2 px-6 py-[0.85rem] rounded-[10px] bg-transparent text-[var(--primary-text-color)] font-semibold text-[0.95rem] no-underline border-[1.5px] border-[var(--border-color)] transition-all duration-200 ease-in hover:border-[var(--primary-color)] hover:text-[var(--primary-color)] w-full sm:w-auto">
-                            <Play className="w-4 h-4 text-[var(--primary-color)]" />
+                        <Link href="#demo" className="inline-flex items-center justify-center gap-2 px-6 py-[0.85rem] rounded-[10px] bg-transparent text-(--primary-text-color) font-semibold text-[0.95rem] no-underline border-[1.5px] border-(--border-color) transition-all duration-200 ease-in hover:border-(--primary-color) hover:text-(--primary-color) w-full sm:w-auto">
+                            <Play className="w-4 h-4 text-(--primary-color)" />
                             <span>Watch Demo</span>
                         </Link>
                     </div>
@@ -318,16 +318,16 @@ export default function HeroSection() {
                 >
                     <div
                         ref={globeContainerRef}
-                        className="w-full aspect-square max-w-[380px] sm:max-w-[480px] lg:max-w-[620px] relative"
+                        className="w-full aspect-square max-w-95 sm:max-w-120 lg:max-w-155 relative"
                     >
                         <World data={SAMPLE_ARCS} globeConfig={GLOBE_CONFIG} />
                     </div>
                 </div>
             </div>
 
-            <div ref={statsRef} className="relative z-10 max-w-[1320px] mt-12 mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[1px] bg-[var(--border-color)] border border-[var(--border-color)] rounded-[14px] overflow-hidden">
+            <div ref={statsRef} className="relative z-10 max-w-330 mt-12 mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-(--border-color) border border-(--border-color) rounded-[14px] overflow-hidden">
                 {STATS.map((stat, idx) => (
-                    <div key={idx} className="hero-stat-card flex items-center gap-[0.85rem] p-4 sm:p-[1.25rem_1.5rem] bg-[var(--surface-color)] transition-COLORS duration-200 ease-in hover:bg-[var(--surface-strong-color)]">
+                    <div key={idx} className="hero-stat-card flex items-center gap-[0.85rem] p-4 sm:p-[1.25rem_1.5rem] bg-(--surface-color) transition-COLORS duration-200 ease-in hover:bg-(--surface-strong-color)">
                         <div className="flex items-center justify-center shrink-0">
                             {stat.visualization}
                         </div>
@@ -336,11 +336,11 @@ export default function HeroSection() {
                                 ref={(el) => {
                                     counterRefs.current[idx] = el;
                                 }}
-                                className="text-[1.35rem] font-extrabold text-[var(--primary-text-color)] tracking-[-0.02em] leading-[1.2]"
+                                className="text-[1.35rem] font-extrabold text-(--primary-text-color) tracking-[-0.02em] leading-[1.2]"
                             >
                                 0
                             </span>
-                            <span className="text-[0.72rem] text-[var(--secondary-text-color)] font-medium leading-[1.3] mt-[2px]">
+                            <span className="text-[0.72rem] text-(--secondary-text-color) font-medium leading-[1.3] mt-0.5">
                                 {stat.label}
                             </span>
                         </div>
