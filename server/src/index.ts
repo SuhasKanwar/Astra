@@ -4,6 +4,7 @@ import { PORT } from './lib/config.ts';
 import logger from './middlewares/logger.ts';
 import authRouter from './routes/authRouter.ts';
 import newsRouter from './routes/newsRouter.ts';
+import eventsRouter from './routes/eventsRouter.ts';
 import authenticate from './middlewares/authenticate.ts';
 
 const app = express();
@@ -31,6 +32,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/news", authenticate, newsRouter);
+app.use("/api/events", authenticate, eventsRouter);
 
 app.listen(PORT, (err) => {
     if (err) {
