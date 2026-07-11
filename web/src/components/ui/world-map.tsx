@@ -11,11 +11,19 @@ interface MapProps {
         end: { lat: number; lng: number; label?: string };
     }>;
     lineColor?: string;
+    mapDotColor?: string;
+    onDotHover?: (index: number | null) => void;
+    onDotClick?: (index: number) => void;
+    isBlinking?: boolean;
 }
 
 export function WorldMap({
     dots = [],
     lineColor = "#0ea5e9",
+    mapDotColor = "#00000040",
+    onDotHover,
+    onDotClick,
+    isBlinking = true,
 }: MapProps) {
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -24,11 +32,11 @@ export function WorldMap({
         const map = new MapConstructor({ height: 100, grid: "diagonal" });
         return map.getSVG({
             radius: 0.22,
-            color: "#00000040",
+            color: mapDotColor,
             shape: "circle",
             backgroundColor: "transparent",
         });
-    }, []);
+    }, [mapDotColor]);
 
     const projectPoint = (lat: number, lng: number) => {
         const x = (lng + 180) * (800 / 360);
@@ -97,69 +105,97 @@ export function WorldMap({
 
                 {dots.map((dot, i) => (
                     <g key={`points-group-${i}`}>
-                        <g key={`start-${i}`}>
+                        <g 
+                            key={`start-${i}`}
+                            className="pointer-events-auto cursor-pointer"
+                            onMouseEnter={() => onDotHover?.(i)}
+                            onMouseLeave={() => onDotHover?.(null)}
+                            onClick={() => onDotClick?.(i)}
+                        >
                             <circle
                                 cx={projectPoint(dot.start.lat, dot.start.lng).x}
                                 cy={projectPoint(dot.start.lat, dot.start.lng).y}
-                                r="2"
-                                fill={lineColor}
+                                r="12"
+                                fill="transparent"
                             />
                             <circle
                                 cx={projectPoint(dot.start.lat, dot.start.lng).x}
                                 cy={projectPoint(dot.start.lat, dot.start.lng).y}
                                 r="2"
                                 fill={lineColor}
-                                opacity="0.5"
-                            >
-                                <animate
-                                    attributeName="r"
-                                    from="2"
-                                    to="8"
-                                    dur="1.5s"
-                                    begin="0s"
-                                    repeatCount="indefinite"
-                                />
-                                <animate
-                                    attributeName="opacity"
-                                    from="0.5"
-                                    to="0"
-                                    dur="1.5s"
-                                    begin="0s"
-                                    repeatCount="indefinite"
-                                />
-                            </circle>
+                            />
+                            {isBlinking && (
+                                <circle
+                                    cx={projectPoint(dot.start.lat, dot.start.lng).x}
+                                    cy={projectPoint(dot.start.lat, dot.start.lng).y}
+                                    r="2"
+                                    fill={lineColor}
+                                    opacity="0.5"
+                                >
+                                    <animate
+                                        attributeName="r"
+                                        from="2"
+                                        to="8"
+                                        dur="1.5s"
+                                        begin="0s"
+                                        repeatCount="indefinite"
+                                    />
+                                    <animate
+                                        attributeName="opacity"
+                                        from="0.5"
+                                        to="0"
+                                        dur="1.5s"
+                                        begin="0s"
+                                        repeatCount="indefinite"
+                                    />
+                                </circle>
+                            )}
                         </g>
-                        <g key={`end-${i}`}>
+                        <g 
+                            key={`end-${i}`}
+                            className="pointer-events-auto cursor-pointer"
+                            onMouseEnter={() => onDotHover?.(i)}
+                            onMouseLeave={() => onDotHover?.(null)}
+                            onClick={() => onDotClick?.(i)}
+                        >
                             <circle
                                 cx={projectPoint(dot.end.lat, dot.end.lng).x}
                                 cy={projectPoint(dot.end.lat, dot.end.lng).y}
-                                r="2"
-                                fill={lineColor}
+                                r="12"
+                                fill="transparent"
                             />
                             <circle
                                 cx={projectPoint(dot.end.lat, dot.end.lng).x}
                                 cy={projectPoint(dot.end.lat, dot.end.lng).y}
                                 r="2"
                                 fill={lineColor}
-                                opacity="0.5"
-                            >
-                                <animate
-                                    attributeName="r"
-                                    from="2"
-                                    to="8"
-                                    dur="1.5s"
-                                    begin="0s"
-                                    repeatCount="indefinite"
-                                />
-                                <animate
-                                    attributeName="opacity"
-                                    from="0.5"
-                                    to="0"
-                                    dur="1.5s"
-                                    begin="0s"
-                                    repeatCount="indefinite"
-                                />
-                            </circle>
+                            />
+                            {isBlinking && (
+                                <circle
+                                    cx={projectPoint(dot.end.lat, dot.end.lng).x}
+                                    cy={projectPoint(dot.end.lat, dot.end.lng).y}
+                                    r="2"
+                                    fill={lineColor}
+                                    opacity="0.5"
+                                >
+                                    <animate
+                                        attributeName="r"
+                                        from="2"
+                                        to="8"
+                                        dur="1.5s"
+                                        begin="0s"
+                                        repeatCount="indefinite"
+                                    />
+                                    <animate
+                                        attributeName="opacity"
+                                        from="0.5"
+                                        to="0"
+                                        dur="1.5s"
+                                        begin="0s"
+                                        repeatCount="indefinite"
+                                    />
+                                </circle>
+                            )}
                         </g>
                     </g>
                 ))}
