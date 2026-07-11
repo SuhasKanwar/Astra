@@ -21,6 +21,7 @@ export default function Sidebar({ onOpen, onClose }: SidebarProps) {
             openMenuButtonColor="var(--primary-text-color)"
             changeMenuColorOnOpen={true}
             colors={['var(--secondary-color)', 'var(--primary-color)']}
+            renderLogo
             logoUrl="/logo.svg"
             accentColor="var(--primary-color)"
             onMenuOpen={onOpen}
