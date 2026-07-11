@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-import { HTTP_SERVER_BASE_URL } from "@/lib/config";
+import { httpClient } from "@/lib/api";
 import { Loader2, ExternalLink } from "lucide-react";
 import AnimatedList from "@/components/ui/animated-list";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,11 +40,7 @@ export default function NewsComponent() {
             try {
                 setLoading(true);
                 setError(null);
-                const response = await axios.get(`${HTTP_SERVER_BASE_URL}${activeCategory.endpoint}`, {
-                    headers: {
-                        Authorization: `Bearer ${session.accessToken}`,
-                    },
-                });
+                const response = await httpClient.get(activeCategory.endpoint);
 
                 if (response.data?.success) {
                     setArticles(response.data.data.articles || []);
