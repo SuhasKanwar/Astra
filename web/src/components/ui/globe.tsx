@@ -231,13 +231,11 @@ export function Globe({ globeConfig, data }: WorldProps) {
 }
 
 export function WebGLRendererConfig() {
-    const { gl, size } = useThree();
+    const { gl } = useThree();
 
     useEffect(() => {
-        gl.setPixelRatio(window.devicePixelRatio);
-        gl.setSize(size.width, size.height);
         gl.setClearColor(0xffaaff, 0);
-    }, []);
+    }, [gl]);
 
     return null;
 }
@@ -247,7 +245,7 @@ export function World(props: WorldProps) {
     const scene = new Scene();
     scene.fog = new Fog(0xffffff, 400, 2000);
     return (
-        <Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)}>
+        <Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)} resize={{ scroll: false }}>
             <WebGLRendererConfig />
             <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
             <directionalLight

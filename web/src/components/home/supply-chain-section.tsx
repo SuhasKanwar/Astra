@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Ship, Anchor, MapPin } from "lucide-react";
+import { Ship, MapPin } from "lucide-react";
 import { WorldMap } from "@/components/ui/world-map";
 
 export default function SupplyChainSection() {
