@@ -1,7 +1,7 @@
 import BorderGlow from './border-glow';
 
-export default function Card({ children, className }: { children: React.ReactNode; className?: string }) {
-    return (
+export default function Card({ children, className, variant = "glow" }: { children: React.ReactNode; className?: string, variant?: "glow" | "solid" }) {
+    return variant === "glow" ? (
         <BorderGlow
             edgeSensitivity={30}
             glowColor="40 80 80"
@@ -17,6 +17,9 @@ export default function Card({ children, className }: { children: React.ReactNod
                 {children}
             </div>
         </BorderGlow>
-
+    ) : (
+        <div className={className}>
+            {children}
+        </div>
     );
 }
