@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 
 export interface StaggeredMenuItem {
@@ -263,7 +264,6 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         spinTweenRef.current?.kill();
 
         if (opening) {
-            // ensure container never rotates
             gsap.set(icon, { rotate: 0, transformOrigin: '50% 50%' });
             spinTweenRef.current = gsap
                 .timeline({ defaults: { ease: 'power4.out' } })
@@ -493,7 +493,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                             {items && items.length ? (
                                 items.map((it, idx) => (
                                     <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
-                                        <a
+                                        <Link
                                             className="sm-panel-item relative text-(--primary-text-color) font-semibold text-[2.5rem] cursor-pointer leading-none tracking-[-1px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[0.8em]"
                                             href={it.link}
                                             aria-label={it.ariaLabel}
@@ -502,7 +502,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                                             <span className="sm-panel-itemLabel inline-block origin-[50%_100%] will-change-transform">
                                                 {it.label}
                                             </span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 ))
                             ) : (
@@ -525,14 +525,14 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                                 >
                                     {socialItems.map((s, i) => (
                                         <li key={s.label + i} className="sm-socials-item">
-                                            <a
+                                            <Link
                                                 href={s.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="sm-socials-link text-[1.2rem] font-medium text-(--primary-text-color) no-underline relative inline-block py-0.5 transition-[color,opacity] duration-300 ease-linear"
                                             >
                                                 {s.label}
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>

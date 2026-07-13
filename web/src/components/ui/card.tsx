@@ -18,7 +18,7 @@ export default function Card({ children, className, variant = "glow" }: { childr
             </div>
         </BorderGlow>
     ) : (
-        <div className={className}>
+        <div className={`rounded-[28px] border border-(--border-color) bg-(--surface-color) shadow-sm ${className || ""}`.trim()}>
             {children}
         </div>
     );

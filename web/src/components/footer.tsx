@@ -18,22 +18,22 @@ export default function Footer() {
                             Next-generation supply chain intelligence and predictive risk management for global energy security.
                         </p>
                         <div className="flex items-center gap-4">
-                            <a href="#" className="text-white/40 hover:text-white transition-colors">
+                            <Link href="#" className="text-white/40 hover:text-white transition-colors">
                                 <TwitterIcon className="w-5 h-5" />
                                 <span className="sr-only">Twitter</span>
-                            </a>
-                            <a href="#" className="text-white/40 hover:text-white transition-colors">
+                            </Link>
+                            <Link href="#" className="text-white/40 hover:text-white transition-colors">
                                 <GithubIcon className="w-5 h-5" />
                                 <span className="sr-only">GitHub</span>
-                            </a>
-                            <a href="#" className="text-white/40 hover:text-white transition-colors">
+                            </Link>
+                            <Link href="#" className="text-white/40 hover:text-white transition-colors">
                                 <LinkedinIcon className="w-5 h-5" />
                                 <span className="sr-only">LinkedIn</span>
-                            </a>
-                            <a href="#" className="text-white/40 hover:text-white transition-colors">
+                            </Link>
+                            <Link href="#" className="text-white/40 hover:text-white transition-colors">
                                 <Mail className="w-5 h-5" />
                                 <span className="sr-only">Email</span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

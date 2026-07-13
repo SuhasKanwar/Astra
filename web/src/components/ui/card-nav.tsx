@@ -248,9 +248,9 @@ const CardNav: React.FC<CardNavProps> = ({
                                     if (lnk.href) {
                                         if (isExternal) {
                                             return (
-                                                <a key={`${lnk.label}-${i}`} href={lnk.href} target="_blank" rel="noopener noreferrer" className={className} onClick={lnk.onClick} aria-label={lnk.ariaLabel}>
+                                                <Link key={`${lnk.label}-${i}`} href={lnk.href} target="_blank" rel="noopener noreferrer" className={className} onClick={lnk.onClick} aria-label={lnk.ariaLabel}>
                                                     {content}
-                                                </a>
+                                                </Link>
                                             );
                                         }
                                         return (
