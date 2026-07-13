@@ -1,11 +1,9 @@
 import type { Request, Response } from "express";
-import NewsAPI from "newsapi";
 import axios from "axios";
-import { NEWS_API_KEY, FALLBACK_NEWS_SOURCES, NEWS_CACHE_TTL } from "../lib/config.ts";
+import { FALLBACK_NEWS_SOURCES, NEWS_CACHE_TTL } from "../lib/config.ts";
 import CacheService, { cacheService } from "../services/cacheService.ts";
 import { parseSimpleRss } from "../utils/news.ts";
-
-const newsapi = new (NewsAPI as any)(NEWS_API_KEY);
+import { newsapi } from "../lib/news.ts";
 
 export async function searchNewsHandler(req: Request, res: Response) {
   try {
@@ -25,7 +23,7 @@ export async function searchNewsHandler(req: Request, res: Response) {
       page: Number(page),
       pageSize: Number(pageSize)
     };
-    const cacheKey = CacheService.generateCacheKey("search", queryParams);
+    const cacheKey = CacheService.generateCacheKey("news_search", queryParams);
 
     const cachedData = cacheService.get(cacheKey);
     if (cachedData) {
