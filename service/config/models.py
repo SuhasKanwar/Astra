@@ -10,3 +10,29 @@ NEMOTRON = {
     "REASONING_BUDGET": 16384,
     "CHAT_TEMPLATE_KWARGS": {"enable_thinking": True}
 }
+
+ROUTER_MODEL = {
+    "MODEL_NAME": "llama-3.3-70b-versatile",
+    "RESPONSE_FORMAT": {
+        "type": "json_schema",
+        "json_schema": {
+            "name": "RouterOutput",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "classification": {
+                        "type": "string",
+                        "enum": ["supply_chain", "general"],
+                        "description": "Classify as 'supply_chain' if related to supply chain, geopolitics, macroeconomics. Otherwise 'general'."
+                    },
+                    "reasoning": {
+                        "type": "string",
+                        "description": "Brief reasoning for why this classification was chosen."
+                    }
+                },
+                "required": ["classification", "reasoning"],
+                "additionalProperties": False
+            }
+        }
+    }
+}
