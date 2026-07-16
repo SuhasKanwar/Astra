@@ -1,10 +1,10 @@
 import { CardNavItem } from "@/components/ui/card-nav";
 
 export const SIDEBAR_ITEMS = [
-    { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
-    { label: 'About', ariaLabel: 'Learn about us', link: '/about' },
-    { label: 'Services', ariaLabel: 'View our services', link: '/services' },
-    { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
+    { label: 'Home', ariaLabel: 'Go to dashboard page', link: '/dashboard' },
+    { label: 'Bot', ariaLabel: 'Chat with our AI Assistant', link: '/dashboard/bot' },
+    { label: 'Historical Events', ariaLabel: 'View historical disruptions', link: '/dashboard/events' },
+    { label: 'Fleet Management', ariaLabel: 'Manage your fleet', link: '/dashboard/fleet' },
 ];
 
 export const SIDEBAR_SOCIAL_ITEMS = [
