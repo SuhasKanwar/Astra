@@ -25,8 +25,10 @@ class Nemotron():
                 temperature=NEMOTRON["TEMPERATURE"],
                 top_p=NEMOTRON["TOP_P"],
                 max_tokens=NEMOTRON["MAX_TOKENS"],
-                reasoning_budget=NEMOTRON["REASONING_BUDGET"],
-                chat_template_kwargs=NEMOTRON["CHAT_TEMPLATE_KWARGS"],
+                model_kwargs={
+                    "reasoning_budget": NEMOTRON["REASONING_BUDGET"],
+                    "chat_template_kwargs": NEMOTRON["CHAT_TEMPLATE_KWARGS"]
+                }
             )
             self.prompt_template = ChatPromptTemplate.from_messages([
                 self.system_prompt,
