@@ -19,7 +19,6 @@ class Llama():
         self.system_prompt = LLAMA_SYSTEM_PROMPT
         try:
             self.llm = ChatGroq(groq_api_key=GROQ_API_KEY, model_name=self.model_name)
-            self.llm.bind_tools(self.get_generic_tools())
             self.prompt_template = ChatPromptTemplate.from_messages([
                 self.system_prompt,
                 ("system", "Relevant context (may be partial):\n{context}"),
@@ -37,7 +36,7 @@ class Llama():
             response = self.chain.invoke({
                 "history": history,
                 "input": prompt,
-                "context": "" # SUHAS: no context passed for now, need to be passed from the agents eventually
+                "context": "" # SUHAS: no context passed for now, need to be passed from the agents eventually in case there is need | no need for now
             })
             text = response.content if hasattr(response, "content") else str(response)
             return {"text": text}

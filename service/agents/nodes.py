@@ -1,12 +1,16 @@
 from agents.state import AgentState
 from models.nemotron import Nemotron
+from models.llama import Llama
+from services.router import ModelRouter
 from tools.research import execute_search
 from config.agent import AGENT_CONFIG
-from config.models import NEMOTRON
+from config.models import NEMOTRON, ROUTER_MODEL, LLAMA
 from tenacity import retry, stop_after_attempt, wait_fixed
 from utils.logger import logger
 
 nemotron_client = Nemotron(model_name=NEMOTRON["MODEL_NAME"])
+router_client = ModelRouter(model_name=ROUTER_MODEL["MODEL_NAME"])
+llama_client = Llama(model_name=LLAMA["MODEL_NAME"])
 
 @retry(
     stop=stop_after_attempt(AGENT_CONFIG["RATE_LIMIT_RETRIES"]), 
@@ -14,6 +18,33 @@ nemotron_client = Nemotron(model_name=NEMOTRON["MODEL_NAME"])
 )
 def generate_response_with_retry(prompt: str) -> dict:
     return nemotron_client.generate_response(prompt, [], [])
+
+def router_node(state: AgentState) -> dict:
+    query = state.get("query", "")
+    
+    classification, reasoning = router_client.route_request(query)
+    logger.info(f"Graph router classified as: {classification} \n\n Reason: {reasoning}")
+    
+    return {"classification": classification, "reasoning": reasoning}
+
+def llama_node(state: AgentState) -> dict:
+    query = state.get("query", "")
+    reasoning = state.get("reasoning", "")
+    
+    try:
+        response = llama_client.generate_response(query, [], [])
+        analysis = {
+            "reasoning": reasoning,
+            "response": response.get("text", "")
+        }
+    except Exception as e:
+        logger.error(f"Llama node failed: {e}")
+        analysis = {
+            "reasoning": reasoning,
+            "response": f"Failed to analyze due to model error: {e}"
+        }
+        
+    return {"final_response": analysis}
 
 def research_node(state: AgentState) -> dict:
     query = state.get("query", "")
