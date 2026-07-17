@@ -58,6 +58,22 @@ html {
   animation: toast-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes chat-message-enter {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-chat-message {
+  animation: chat-message-enter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+}
+
 .hide-scrollbar {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;

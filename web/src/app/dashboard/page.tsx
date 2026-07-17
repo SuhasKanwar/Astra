@@ -4,9 +4,9 @@ import GeopoliticalEventsCarousel from "@/components/dashboard/GeopoliticalEvent
 
 export default function DashboardPage() {
     return (
-        <main className="flex w-full h-full overflow-hidden ">
+        <main className="flex w-full h-full overflow-hidden">
             <div className="flex-1 p-6 md:p-8 overflow-y-auto mt-20 hide-scrollbar">
-                <div className="w-full h-[600px]">
+                <div className="w-full h-150">
                     <NaturalEventsWidget />
                 </div>
                 <GeopoliticalEventsCarousel />

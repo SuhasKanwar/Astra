@@ -96,7 +96,8 @@ const GEOPOLITICAL_EVENTS_QUERY = '(tariffs OR sanctions OR OPEC OR "supply chai
 
 export async function getGeopoliticalEventsHandler(req: Request, res: Response) {
     try {
-        const cacheKey = CacheService.generateCacheKey("geopolitical_events", {});
+        const limit = parseInt((req.query.limit as string) || "0");
+        const cacheKey = CacheService.generateCacheKey("geopolitical_events", { limit });
         const cachedData = cacheService.get(cacheKey);
         if (cachedData) {
             return res.status(200).json({
@@ -137,12 +138,17 @@ export async function getGeopoliticalEventsHandler(req: Request, res: Response) 
                     title: article.title,
                     description: article.description,
                     sourceUrl: article.url,
+                    imageUrl: article.urlToImage || null,
                     latitude: matchedCoords.lat,
                     longitude: matchedCoords.lng,
                     date: article.publishedAt,
                     categoryTitle: "Geopolitics",
                     matchedKeyword: matchedKeyword
                 });
+                
+                if (limit > 0 && geocodedEvents.length >= limit) {
+                    break;
+                }
             }
         }
         cacheService.set(cacheKey, geocodedEvents, NEWS_CACHE_TTL / 1000);
