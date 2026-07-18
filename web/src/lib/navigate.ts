@@ -2,9 +2,7 @@ import { CardNavItem } from "@/components/ui/card-nav";
 
 export const SIDEBAR_ITEMS = [
     { label: 'Home', ariaLabel: 'Go to dashboard page', link: '/dashboard' },
-    { label: 'Bot', ariaLabel: 'Chat with our AI Assistant', link: '/dashboard/bot' },
-    { label: 'Historical Events', ariaLabel: 'View historical disruptions', link: '/dashboard/events' },
-    { label: 'Fleet Management', ariaLabel: 'Manage your fleet', link: '/dashboard/fleet' },
+    { label: 'Astra Bot', ariaLabel: 'Chat with our AI Assistant', link: '/dashboard/bot' },
 ];
 
 export const SIDEBAR_SOCIAL_ITEMS = [

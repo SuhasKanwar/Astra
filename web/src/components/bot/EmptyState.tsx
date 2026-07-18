@@ -8,11 +8,16 @@ import {
     Activity,
     History,
     X,
-    ExternalLink
+    ExternalLink,
+    Edit2,
+    Trash2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { httpClient } from '@/lib/api';
 import Link from 'next/link';
+import ConfirmationModal from '../ui/confirmation-modal';
+import RenameModal from '../ui/rename-modal';
+import { useToast } from '@/context/ToastProvider';
 
 const TRENDING_TOPICS = [
     { name: "Semiconductor Export Controls", query: "What are the latest semiconductor export controls and their supply chain impact?", icon: <Activity className="w-4 h-4 mr-3 text-blue-500" /> },
@@ -40,7 +45,7 @@ const getDotColor = (index: number) => {
     return colors[index % colors.length];
 };
 
-function HistoryModal({ isOpen, onClose, chats, onSelect }: { isOpen: boolean, onClose: () => void, chats: any[], onSelect?: (id: string) => void }) {
+function HistoryModal({ isOpen, onClose, chats, onSelect, onDelete, onRename }: { isOpen: boolean, onClose: () => void, chats: any[], onSelect?: (id: string) => void, onDelete?: (id: string) => void, onRename?: (id: string, title: string) => void }) {
     const [isRendered, setIsRendered] = useState(isOpen);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -76,14 +81,24 @@ function HistoryModal({ isOpen, onClose, chats, onSelect }: { isOpen: boolean, o
                 </div>
                 <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                     {completeHistory.map((chat, idx) => (
-                        <div key={chat.id} onClick={() => onSelect?.(chat.id)} className="flex items-center text-sm justify-between hover:bg-gray-50 p-3 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+                        <div key={chat.id} className="flex items-center text-sm justify-between hover:bg-gray-50 p-3 rounded-xl transition-colors border border-transparent hover:border-gray-200 group cursor-pointer" onClick={() => onSelect?.(chat.id)}>
                             <div className="flex items-center">
                                 <div className={`w-2 h-2 rounded-full ${getDotColor(idx)} mr-4`}></div>
                                 <span className="font-medium text-(--primary-text-color)">{chat.title || 'New Conversation'}</span>
                             </div>
-                            <span className="flex items-center text-gray-500 text-xs font-medium bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
-                                <Clock className="w-3 h-3 mr-1.5" /> {formatTimeAgo(chat.lastUpdated)}
-                            </span>
+                            <div className="relative flex items-center justify-end">
+                                <span className="flex items-center text-gray-500 text-xs font-medium bg-gray-50 px-2 py-1 rounded-md border border-gray-100 transition-opacity duration-200 group-hover:opacity-0">
+                                    <Clock className="w-3 h-3 mr-1.5" /> {formatTimeAgo(chat.lastUpdated)}
+                                </span>
+                                <div className="absolute inset-y-0 right-0 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <button onClick={(e) => { e.stopPropagation(); onRename?.(chat.id, chat.title || 'New Conversation'); }} className="p-1.5 text-gray-500 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                                        <Edit2 className="w-4 h-4" />
+                                    </button>
+                                    <button onClick={(e) => { e.stopPropagation(); onDelete?.(chat.id); }} className="p-1.5 text-gray-500 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -102,7 +117,24 @@ export default function EmptyState({ onTopicSelect, onSelectConversation }: Empt
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alert, setAlert] = useState<any>(null);
     const [conversations, setConversations] = useState<any[]>([]);
+
+    const [chatToDelete, setChatToDelete] = useState<string | null>(null);
+    const [chatToRename, setChatToRename] = useState<{ id: string, title: string } | null>(null);
+    const [isActionLoading, setIsActionLoading] = useState(false);
+
     const userName = session?.user?.name ? session.user.name.split(' ')[0] : "User";
+    const { success, error: showError } = useToast();
+
+    const fetchConversations = async () => {
+        try {
+            const res = await httpClient.get('/api/conversation');
+            if (res.data?.success) {
+                setConversations(res.data.data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch conversations", err);
+        }
+    };
 
     useEffect(() => {
         const fetchAlert = async () => {
@@ -115,19 +147,41 @@ export default function EmptyState({ onTopicSelect, onSelectConversation }: Empt
                 console.error("Failed to fetch alert", err);
             }
         };
-        const fetchConversations = async () => {
-            try {
-                const res = await httpClient.get('/api/conversation');
-                if (res.data?.success) {
-                    setConversations(res.data.data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch conversations", err);
-            }
-        };
         fetchAlert();
         fetchConversations();
     }, []);
+
+    const handleDelete = async () => {
+        if (!chatToDelete) return;
+        setIsActionLoading(true);
+        try {
+            await httpClient.delete(`/api/conversation/${chatToDelete}`);
+            await fetchConversations();
+            success("Conversation deleted successfully");
+        } catch (err) {
+            console.error(err);
+            showError("Failed to delete conversation", "Please try again later.");
+        } finally {
+            setIsActionLoading(false);
+            setChatToDelete(null);
+        }
+    };
+
+    const handleRename = async (newTitle: string) => {
+        if (!chatToRename) return;
+        setIsActionLoading(true);
+        try {
+            await httpClient.put(`/api/conversation/rename/${chatToRename.id}`, { title: newTitle });
+            await fetchConversations();
+            success("Conversation renamed successfully");
+        } catch (err) {
+            console.error(err);
+            showError("Failed to rename conversation", "Please try again later.");
+        } finally {
+            setIsActionLoading(false);
+            setChatToRename(null);
+        }
+    };
 
     return (
         <div className="flex flex-col w-full h-full min-h-[70vh] justify-center max-w-4xl mx-auto px-4 py-8">
@@ -211,22 +265,56 @@ export default function EmptyState({ onTopicSelect, onSelectConversation }: Empt
 
                 <ul className="space-y-4">
                     {conversations.slice(0, 3).map((chat, idx) => (
-                        <li key={chat.id} onClick={() => onSelectConversation?.(chat.id)} className="flex items-center text-sm justify-between hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer">
+                        <li key={chat.id} className="flex items-center text-sm justify-between hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors group cursor-pointer" onClick={() => onSelectConversation?.(chat.id)}>
                             <div className="flex items-center">
                                 <div className={`w-2 h-2 rounded-full ${getDotColor(idx)} mr-3`}></div>
                                 <span className="w-64 font-medium text-(--primary-text-color) truncate">{chat.title || 'New Conversation'}</span>
                             </div>
-                            <div className="flex items-center">
-                                <span className="flex items-center text-gray-500 text-xs font-medium">
+                            <div className="relative flex items-center justify-end">
+                                <span className="flex items-center text-gray-500 text-xs font-medium transition-opacity duration-200 group-hover:opacity-0">
                                     <Clock className="w-3 h-3 mr-1" /> {formatTimeAgo(chat.lastUpdated)}
                                 </span>
+                                <div className="absolute inset-y-0 right-0 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    <button onClick={(e) => { e.stopPropagation(); setChatToRename({ id: chat.id, title: chat.title || 'New Conversation' }); }} className="p-1.5 text-gray-500 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                                        <Edit2 className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button onClick={(e) => { e.stopPropagation(); setChatToDelete(chat.id); }} className="p-1.5 text-gray-500 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
                             </div>
                         </li>
                     ))}
                 </ul>
             </div>
 
-            <HistoryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} chats={conversations} onSelect={onSelectConversation} />
+            <HistoryModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                chats={conversations}
+                onSelect={onSelectConversation}
+                onDelete={setChatToDelete}
+                onRename={(id, title) => setChatToRename({ id, title })}
+            />
+
+            <ConfirmationModal
+                isOpen={!!chatToDelete}
+                onClose={() => setChatToDelete(null)}
+                onConfirm={handleDelete}
+                title="Delete Conversation"
+                description="Are you sure you want to delete this conversation? This action cannot be undone."
+                confirmText="Delete"
+                variant="danger"
+                isLoading={isActionLoading}
+            />
+
+            <RenameModal
+                isOpen={!!chatToRename}
+                onClose={() => setChatToRename(null)}
+                onRename={handleRename}
+                initialTitle={chatToRename?.title || ""}
+                isLoading={isActionLoading}
+            />
         </div>
     );
 }

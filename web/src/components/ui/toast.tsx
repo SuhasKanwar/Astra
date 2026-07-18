@@ -1,26 +1,11 @@
 import type { ToastItem } from "@/types/toast";
+import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from "lucide-react";
 
-const variantStyles: Record<ToastItem["variant"], { ring: string; title: string; badge: string }> = {
-	success: {
-		ring: "border-emerald-500/40 bg-emerald-950/80 text-emerald-50 shadow-emerald-950/30",
-		title: "text-emerald-50",
-		badge: "bg-emerald-400",
-	},
-	error: {
-		ring: "border-rose-500/40 bg-rose-950/80 text-rose-50 shadow-rose-950/30",
-		title: "text-rose-50",
-		badge: "bg-rose-400",
-	},
-	info: {
-		ring: "border-sky-500/40 bg-sky-950/80 text-sky-50 shadow-sky-950/30",
-		title: "text-sky-50",
-		badge: "bg-sky-400",
-	},
-	warning: {
-		ring: "border-amber-500/40 bg-amber-950/80 text-amber-50 shadow-amber-950/30",
-		title: "text-amber-50",
-		badge: "bg-amber-400",
-	},
+const variantStyles: Record<ToastItem["variant"], { ring: string; iconColor: string }> = {
+	success: { ring: "border-emerald-200", iconColor: "text-emerald-500" },
+	error: { ring: "border-rose-200", iconColor: "text-rose-500" },
+	info: { ring: "border-blue-200", iconColor: "text-blue-500" },
+	warning: { ring: "border-amber-200", iconColor: "text-amber-500" },
 };
 
 export default function Toast({
@@ -39,26 +24,29 @@ export default function Toast({
 					return (
 						<article
 							key={toast.id}
-							className={`pointer-events-auto rounded-3xl border p-4 shadow-2xl backdrop-blur ${styles.ring} animate-toast-enter`}
+							className={`pointer-events-auto rounded-2xl border bg-white/95 p-4 shadow-[0_8px_30px_rgb(0,0,0,0.08)] backdrop-blur-md animate-toast-enter ${styles.ring}`}
 						>
 							<div className="flex items-start gap-3">
-								<span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${styles.badge}`} />
-								<div className="min-w-0 flex-1 space-y-1">
-									<div className="flex items-start gap-3">
-										<h2 className={`text-sm font-semibold ${styles.title}`}>{toast.title}</h2>
-										<button
-											type="button"
-											onClick={() => onDismiss(toast.id)}
-											className="ml-auto rounded-full px-2 py-0.5 text-xs font-medium uppercase tracking-[0.25em] text-white/70 transition hover:bg-white/10 hover:text-white"
-											aria-label="Dismiss toast"
-										>
-											Close
-										</button>
-									</div>
+								<div className={`mt-0.5 shrink-0 ${styles.iconColor}`}>
+									{toast.variant === 'success' && <CheckCircle2 className="w-5 h-5" />}
+									{toast.variant === 'error' && <AlertCircle className="w-5 h-5" />}
+									{toast.variant === 'warning' && <AlertTriangle className="w-5 h-5" />}
+									{toast.variant === 'info' && <Info className="w-5 h-5" />}
+								</div>
+								<div className="min-w-0 flex-1 space-y-1 mt-0.5">
+									<h2 className={`text-sm font-semibold text-gray-900`}>{toast.title}</h2>
 									{toast.description ? (
-										<p className="text-sm leading-6 text-white/80">{toast.description}</p>
+										<p className="text-sm leading-snug text-gray-500">{toast.description}</p>
 									) : null}
 								</div>
+								<button
+									type="button"
+									onClick={() => onDismiss(toast.id)}
+									className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+									aria-label="Dismiss toast"
+								>
+									<X className="w-4 h-4" />
+								</button>
 							</div>
 						</article>
 					);
