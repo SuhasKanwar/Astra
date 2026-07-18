@@ -41,7 +41,7 @@ class Nemotron():
             logger.error(f"Error initializing Nemotron model: {str(e)}")
             raise AstraException(f"Failed to initialize Nemotron model ({self.model_name})", sys)
 
-    def generate_response(self, prompt: str, session_history: list, files: list) -> dict:
+    def generate_response(self, prompt: str, session_history: list) -> dict:
         try:
             history = session_history or []
             

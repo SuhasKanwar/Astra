@@ -30,7 +30,7 @@ class Llama():
             logger.error(f"Error initializing LLaMA model: {str(e)}")
             raise AstraException(f"Failed to initialize LLaMA model ({self.model_name})", sys)
 
-    def generate_response(self, prompt: str, session_history: list, files: list) -> dict:
+    def generate_response(self, prompt: str, session_history: list) -> dict:
         try:
             history = session_history or []
             response = self.chain.invoke({

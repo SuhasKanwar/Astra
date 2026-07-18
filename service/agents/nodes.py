@@ -16,8 +16,8 @@ llama_client = Llama(model_name=LLAMA["MODEL_NAME"])
     stop=stop_after_attempt(AGENT_CONFIG["RATE_LIMIT_RETRIES"]), 
     wait=wait_fixed(AGENT_CONFIG["RATE_LIMIT_DELAY_SECONDS"])
 )
-def generate_response_with_retry(prompt: str) -> dict:
-    return nemotron_client.generate_response(prompt, [], [])
+def generate_response_with_retry(prompt: str, session_history: list) -> dict:
+    return nemotron_client.generate_response(prompt, session_history)
 
 def router_node(state: AgentState) -> dict:
     query = state.get("query", "")
@@ -30,9 +30,10 @@ def router_node(state: AgentState) -> dict:
 def llama_node(state: AgentState) -> dict:
     query = state.get("query", "")
     reasoning = state.get("reasoning", "")
+    session_history = state.get("session_history", [])
     
     try:
-        response = llama_client.generate_response(query, [], [])
+        response = llama_client.generate_response(query, session_history)
         analysis = {
             "reasoning": reasoning,
             "response": response.get("text", "")
@@ -62,6 +63,7 @@ def research_node(state: AgentState) -> dict:
 def analysis_node(state: AgentState) -> dict:
     query = state.get("query", "")
     metrics = state.get("metrics_data", "")
+    session_history = state.get("session_history", [])
     
     prompt = (
         f"Based on the following real metrics and internet reports:\n{metrics}\n\n"
@@ -70,7 +72,7 @@ def analysis_node(state: AgentState) -> dict:
     )
     
     try:
-        response = generate_response_with_retry(prompt)
+        response = generate_response_with_retry(prompt, session_history)
         
         reasoning = response.get("reasoning", "")
         text = response.get("text", "")
