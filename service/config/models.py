@@ -12,7 +12,7 @@ NEMOTRON = {
 }
 
 ROUTER_MODEL = {
-    "MODEL_NAME": "meta-llama/llama-4-scout-17b-16e-instruct",
+    "MODEL_NAME": "openai/gpt-oss-120b",
     "RESPONSE_FORMAT": {
         "type": "json_schema",
         "json_schema": {

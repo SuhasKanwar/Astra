@@ -20,25 +20,27 @@ const TRENDING_TOPICS = [
     { name: "European Energy Price Volatility", query: "Summarize the recent volatility in European energy prices and its industrial effect.", icon: <FileBarChart className="w-4 h-4 mr-3 text-red-500" /> }
 ];
 
-const RECENT_CHATS = [
-    {
-        title: "Impact of US elections on semiconductor trade",
-        timeText: "2 hours ago",
-        dotColor: "bg-blue-500"
-    },
-    {
-        title: "Red Sea shipping delays analysis",
-        timeText: "Yesterday",
-        dotColor: "bg-purple-500"
-    },
-    {
-        title: "European tariff modeling for Q4",
-        timeText: "3 days ago",
-        dotColor: "bg-green-500"
-    }
-];
+const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    if (diffInSeconds < 60) return "Just now";
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) return "Yesterday";
+    if (diffInDays < 30) return `${diffInDays} days ago`;
+    return date.toLocaleDateString();
+};
 
-function HistoryModal({ isOpen, onClose, chats }: { isOpen: boolean, onClose: () => void, chats: typeof RECENT_CHATS }) {
+const getDotColor = (index: number) => {
+    const colors = ["bg-blue-500", "bg-purple-500", "bg-green-500", "bg-red-500", "bg-orange-500"];
+    return colors[index % colors.length];
+};
+
+function HistoryModal({ isOpen, onClose, chats, onSelect }: { isOpen: boolean, onClose: () => void, chats: any[], onSelect?: (id: string) => void }) {
     const [isRendered, setIsRendered] = useState(isOpen);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -59,14 +61,7 @@ function HistoryModal({ isOpen, onClose, chats }: { isOpen: boolean, onClose: ()
 
     if (!isRendered) return null;
 
-    const completeHistory = [
-        ...chats,
-        { title: "Supply chain mapping for vital components", timeText: "1 week ago", dotColor: "bg-blue-500" },
-        { title: "Review of global shipping bottlenecks", timeText: "2 weeks ago", dotColor: "bg-purple-500" },
-        { title: "Analysis of raw material shortages in LATAM", timeText: "1 month ago", dotColor: "bg-red-500" },
-        { title: "Tariff implications for electric vehicles", timeText: "1 month ago", dotColor: "bg-green-500" },
-        { title: "Logistics optimization report", timeText: "2 months ago", dotColor: "bg-orange-500" }
-    ];
+    const completeHistory = chats;
 
     return (
         <div className={`fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
@@ -81,13 +76,13 @@ function HistoryModal({ isOpen, onClose, chats }: { isOpen: boolean, onClose: ()
                 </div>
                 <div className="max-h-[60vh] overflow-y-auto pr-2 space-y-2 custom-scrollbar">
                     {completeHistory.map((chat, idx) => (
-                        <div key={idx} className="flex items-center text-sm justify-between hover:bg-gray-50 p-3 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-gray-200">
+                        <div key={chat.id} onClick={() => onSelect?.(chat.id)} className="flex items-center text-sm justify-between hover:bg-gray-50 p-3 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-gray-200">
                             <div className="flex items-center">
-                                <div className={`w-2 h-2 rounded-full ${chat.dotColor} mr-4`}></div>
-                                <span className="font-medium text-(--primary-text-color)">{chat.title}</span>
+                                <div className={`w-2 h-2 rounded-full ${getDotColor(idx)} mr-4`}></div>
+                                <span className="font-medium text-(--primary-text-color)">{chat.title || 'New Conversation'}</span>
                             </div>
                             <span className="flex items-center text-gray-500 text-xs font-medium bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
-                                <Clock className="w-3 h-3 mr-1.5" /> {chat.timeText}
+                                <Clock className="w-3 h-3 mr-1.5" /> {formatTimeAgo(chat.lastUpdated)}
                             </span>
                         </div>
                     ))}
@@ -99,12 +94,14 @@ function HistoryModal({ isOpen, onClose, chats }: { isOpen: boolean, onClose: ()
 
 interface EmptyStateProps {
     onTopicSelect?: (query: string) => void;
+    onSelectConversation?: (id: string) => void;
 }
 
-export default function EmptyState({ onTopicSelect }: EmptyStateProps = {}) {
+export default function EmptyState({ onTopicSelect, onSelectConversation }: EmptyStateProps = {}) {
     const { data: session } = useSession();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alert, setAlert] = useState<any>(null);
+    const [conversations, setConversations] = useState<any[]>([]);
     const userName = session?.user?.name ? session.user.name.split(' ')[0] : "User";
 
     useEffect(() => {
@@ -118,7 +115,18 @@ export default function EmptyState({ onTopicSelect }: EmptyStateProps = {}) {
                 console.error("Failed to fetch alert", err);
             }
         };
+        const fetchConversations = async () => {
+            try {
+                const res = await httpClient.get('/api/conversation');
+                if (res.data?.success) {
+                    setConversations(res.data.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch conversations", err);
+            }
+        };
         fetchAlert();
+        fetchConversations();
     }, []);
 
     return (
@@ -190,7 +198,7 @@ export default function EmptyState({ onTopicSelect }: EmptyStateProps = {}) {
                     <div className="flex items-center font-semibold text-(--primary-text-color)">
                         <History className="w-5 h-5 mr-2 text-(--secondary-text-color)" /> Recent Chat History
                         <span className="text-(--secondary-text-color) ml-2 font-normal text-sm bg-gray-100 px-2 py-0.5 rounded-full">
-                            {RECENT_CHATS.length}
+                            {conversations.length}
                         </span>
                     </div>
                     <button
@@ -202,15 +210,15 @@ export default function EmptyState({ onTopicSelect }: EmptyStateProps = {}) {
                 </div>
 
                 <ul className="space-y-4">
-                    {RECENT_CHATS.map((chat, idx) => (
-                        <li key={idx} className="flex items-center text-sm justify-between hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer">
+                    {conversations.slice(0, 3).map((chat, idx) => (
+                        <li key={chat.id} onClick={() => onSelectConversation?.(chat.id)} className="flex items-center text-sm justify-between hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer">
                             <div className="flex items-center">
-                                <div className={`w-2 h-2 rounded-full ${chat.dotColor} mr-3`}></div>
-                                <span className="w-64 font-medium text-(--primary-text-color) truncate">{chat.title}</span>
+                                <div className={`w-2 h-2 rounded-full ${getDotColor(idx)} mr-3`}></div>
+                                <span className="w-64 font-medium text-(--primary-text-color) truncate">{chat.title || 'New Conversation'}</span>
                             </div>
                             <div className="flex items-center">
                                 <span className="flex items-center text-gray-500 text-xs font-medium">
-                                    <Clock className="w-3 h-3 mr-1" /> {chat.timeText}
+                                    <Clock className="w-3 h-3 mr-1" /> {formatTimeAgo(chat.lastUpdated)}
                                 </span>
                             </div>
                         </li>
@@ -218,7 +226,7 @@ export default function EmptyState({ onTopicSelect }: EmptyStateProps = {}) {
                 </ul>
             </div>
 
-            <HistoryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} chats={RECENT_CHATS} />
+            <HistoryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} chats={conversations} onSelect={onSelectConversation} />
         </div>
     );
 }

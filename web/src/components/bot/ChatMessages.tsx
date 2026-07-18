@@ -13,15 +13,16 @@ export interface Message {
 
 interface ChatMessagesProps {
     messages: Message[];
+    isLoading?: boolean;
 }
 
-export default function ChatMessages({ messages }: ChatMessagesProps) {
+export default function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
     const bottomRef = useRef<HTMLDivElement>(null);
     const { data: session } = useSession();
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, isLoading]);
 
     const renderMessageText = (text: string) => {
         const processedText = text.replace(/(@[\w-]+)/g, '<span class="bg-blue-50 text-(--primary-color) px-1.5 py-0.5 rounded font-medium border border-blue-100 mx-0.5">$1</span>');
@@ -69,6 +70,24 @@ export default function ChatMessages({ messages }: ChatMessagesProps) {
                         </div>
                     </div>
                 ))}
+                {isLoading && (
+                    <div className="flex justify-start animate-chat-message">
+                        <div className="flex w-full max-w-[70%] flex-row">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1 overflow-hidden bg-linear-to-br from-(--primary-color) to-purple-600 text-white mr-4 shadow-md">
+                                <Sparkles className="w-5 h-5" />
+                            </div>
+                            <div className="flex flex-col flex-1 min-w-0">
+                                <div className="px-5 py-4 rounded-3xl shadow-sm bg-(--surface-color) border border-(--border-color) text-(--primary-text-color) rounded-tl-sm self-start inline-block">
+                                    <div className="flex space-x-1.5 h-4 items-center px-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div ref={bottomRef} />
             </div>
         </div>

@@ -9,9 +9,10 @@ interface ChatInputProps {
     onSend: (message: string) => void;
     suggestedQuery?: string;
     onClearSuggested?: () => void;
+    isLoading?: boolean;
 }
 
-export default function ChatInput({ onSend, suggestedQuery, onClearSuggested }: ChatInputProps) {
+export default function ChatInput({ onSend, suggestedQuery, onClearSuggested, isLoading }: ChatInputProps) {
     const [input, setInput] = useState('');
     const [mounted, setMounted] = useState(false);
 
@@ -51,6 +52,7 @@ export default function ChatInput({ onSend, suggestedQuery, onClearSuggested }: 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (isLoading) return;
         if (input.trim()) {
             onSend(input);
             setInput('');
@@ -142,6 +144,7 @@ export default function ChatInput({ onSend, suggestedQuery, onClearSuggested }: 
                     <button
                         type="button"
                         onClick={start}
+                        disabled={isLoading}
                         title="Voice Input"
                         className={`p-2 rounded-full transition-colors mr-2 ${active ? 'bg-red-100 text-red-500 animate-pulse' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}
                     >
@@ -160,14 +163,15 @@ export default function ChatInput({ onSend, suggestedQuery, onClearSuggested }: 
                         value={input}
                         onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
-                        className="w-full bg-transparent outline-none text-transparent caret-(--primary-text-color) text-sm relative z-10 font-sans m-0 p-0 tracking-normal leading-normal block"
+                        disabled={isLoading}
+                        className="w-full bg-transparent outline-none text-transparent caret-(--primary-text-color) text-sm relative z-10 font-sans m-0 p-0 tracking-normal leading-normal block disabled:opacity-50"
                         spellCheck={false}
                     />
                 </div>
 
                 <button
                     type="submit"
-                    disabled={!input.trim()}
+                    disabled={!input.trim() || isLoading}
                     className={`p-2 rounded-full transition-colors ml-2 flex items-center justify-center w-9 h-9 mr-1 shrink-0
                         ${input.trim()
                             ? 'bg-(--primary-color) text-white hover:bg-blue-700 shadow-md'
