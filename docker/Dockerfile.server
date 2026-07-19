@@ -1,0 +1,13 @@
+FROM node:20-slim
+
+WORKDIR /app
+COPY ./server/package.json /app/package.json
+COPY ./server/package-lock.json /app/package-lock.json
+RUN npm install
+
+COPY ./server /app
+EXPOSE 9000
+RUN npm run db:push
+RUN npm run db:generate
+RUN npm run build
+CMD ["npm", "start"]
