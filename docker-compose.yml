@@ -1,0 +1,36 @@
+services:
+  server:
+    image: suhaskanwar/astra-server:1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    ports:
+      - "9000:9000"
+    env_file:
+      - server/.env
+    environment:
+      - MICROSERVICE_BASE_URL=http://service:8000
+    depends_on:
+      - service
+
+  service:
+    image: suhaskanwar/astra-service:1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.service
+    ports:
+      - "8000:8000"
+    env_file:
+      - service/.env
+
+  web:
+    image: suhaskanwar/astra-web:1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    env_file:
+      - web/.env
+    depends_on:
+      - server
