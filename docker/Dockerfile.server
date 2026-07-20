@@ -7,7 +7,6 @@ RUN npm install
 
 COPY ./server /app
 EXPOSE 9000
-RUN npm run db:push
 RUN npm run db:generate
 RUN npm run build
 CMD ["npm", "start"]
