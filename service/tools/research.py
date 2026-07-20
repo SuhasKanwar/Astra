@@ -1,9 +1,11 @@
 from langchain_community.tools import DuckDuckGoSearchResults
+from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from config.agent import AGENT_CONFIG
 from tenacity import retry, stop_after_attempt, wait_fixed
 from utils.logger import logger
 
-search_tool = DuckDuckGoSearchResults(num_results=AGENT_CONFIG["MAX_SEARCH_RESULTS"])
+wrapper = DuckDuckGoSearchAPIWrapper(region="us-en")
+search_tool = DuckDuckGoSearchResults(api_wrapper=wrapper, num_results=AGENT_CONFIG["MAX_SEARCH_RESULTS"])
 
 @retry(
     stop=stop_after_attempt(AGENT_CONFIG["RATE_LIMIT_RETRIES"]), 
